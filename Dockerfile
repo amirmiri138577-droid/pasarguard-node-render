@@ -9,7 +9,7 @@ RUN apk add --no-cache musl-dev build-base curl tar gzip \
     && curl -fsSL "https://github.com/rathole-org/rathole/archive/refs/tags/${RATHOLE_VERSION}.tar.gz" \
        | tar -xz -C /src \
     && cd "/src/rathole-${RATHOLE_VERSION#v}" \
-    && cargo build --release --locked \
+    && cargo build --release --locked --no-default-features --features server,client \
     && install -m 0755 target/release/rathole /rathole
 
 FROM ${PASARGUARD_NODE_IMAGE}
