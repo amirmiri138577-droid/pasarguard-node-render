@@ -176,14 +176,14 @@ if [ "${TUNNEL_ENABLED:-false}" = "true" ]; then
   cat > "$RATHOLE_CONFIG" <<EOF
 [client]
 remote_addr = "${RATHOLE_SERVER_ADDR}"
-default_token = "${RATHOLE_TOKEN}"
 
 [client.services.pasarguard_node]
 type = "tcp"
+token = "${RATHOLE_TOKEN}"
 local_addr = "127.0.0.1:${RATHOLE_LOCAL_PORT}"
 EOF
   echo "[pasarguard-node] starting Rathole client to ${RATHOLE_SERVER_ADDR}"
-  /usr/local/bin/rathole --client "$RATHOLE_CONFIG" &
+  /usr/local/bin/rathole --client "$RATHOLE_CONFIG" 2>&1 &
   TUNNEL_PID=$!
   trap 'kill "$TUNNEL_PID" 2>/dev/null || true' EXIT INT TERM
 fi
