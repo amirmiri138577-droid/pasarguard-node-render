@@ -1,0 +1,35 @@
+services:
+  - type: pserv
+    name: pasarguard-node
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    disk:
+      name: pasarguard-node-data
+      mountPath: /var/lib/pg-node
+      sizeGB: 1
+    envVars:
+      - key: NODE_HOST
+        value: 0.0.0.0
+      - key: SERVICE_PORT
+        value: "62050"
+      - key: SERVICE_PROTOCOL
+        value: grpc
+      - key: NODE_PUBLIC_HOST
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: PRINT_CONNECTION_INFO
+        value: "true"
+      - key: AUTO_GENERATE_CERT
+        value: "true"
+      - key: REGENERATE_CERT_ON_HOST_CHANGE
+        value: "true"
+      - key: SSL_CERT_FILE
+        value: /var/lib/pg-node/certs/ssl_cert.pem
+      - key: SSL_KEY_FILE
+        value: /var/lib/pg-node/certs/ssl_key.pem
+      - key: GENERATED_CONFIG_PATH
+        value: /var/lib/pg-node/generated
