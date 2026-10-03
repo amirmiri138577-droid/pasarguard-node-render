@@ -2,7 +2,7 @@
 ARG RATHOLE_VERSION=v0.5.0
 ARG PASARGUARD_NODE_IMAGE=pasarguard/node:v0.5.4
 
-FROM rust:1.89-alpine AS rathole-build
+FROM rust:1.79-alpine AS rathole-build
 ARG RATHOLE_VERSION
 RUN apk add --no-cache musl-dev build-base curl tar gzip \
     && mkdir -p /src \
