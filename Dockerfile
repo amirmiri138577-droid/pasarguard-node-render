@@ -1,6 +1,11 @@
+# Declare global build arguments before the first FROM so they are available
+# in every stage, including the final FROM expression.
+ARG RATHOLE_VERSION=v0.5.0
+ARG PASARGUARD_NODE_IMAGE=pasarguard/node:v0.5.4
+
 # Build the tunnel client as a static Linux binary.
 FROM rust:1.89-alpine AS rathole-build
-ARG RATHOLE_VERSION=v0.5.0
+ARG RATHOLE_VERSION
 RUN apk add --no-cache musl-dev build-base git \
     && git clone --depth 1 --branch ${RATHOLE_VERSION} https://github.com/rathole-org/rathole.git /src/rathole \
     && cd /src/rathole \
@@ -8,7 +13,6 @@ RUN apk add --no-cache musl-dev build-base git \
     && install -m 0755 target/release/rathole /rathole
 
 # Pin the upstream PasarGuard Node image for reproducible deployments.
-ARG PASARGUARD_NODE_IMAGE=pasarguard/node:v0.5.4
 FROM ${PASARGUARD_NODE_IMAGE}
 
 USER root
