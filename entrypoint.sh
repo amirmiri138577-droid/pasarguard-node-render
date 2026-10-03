@@ -172,7 +172,8 @@ if [ "${TUNNEL_ENABLED:-false}" = "true" ]; then
   [ -n "${RATHOLE_SERVER_ADDR:-}" ] || fail "RATHOLE_SERVER_ADDR is required when TUNNEL_ENABLED=true"
   [ -n "${RATHOLE_TOKEN:-}" ] || fail "RATHOLE_TOKEN is required when TUNNEL_ENABLED=true"
   RATHOLE_CONFIG=/tmp/rathole-client.toml
-  RATHOLE_LOCAL_PORT=${RATHOLE_LOCAL_PORT:-$SERVICE_PORT}
+RATHOLE_LOCAL_PORT=${RATHOLE_LOCAL_PORT:-$SERVICE_PORT}
+RATHOLE_USER_PORT=${RATHOLE_USER_PORT:-8443}
   cat > "$RATHOLE_CONFIG" <<EOF
 [client]
 remote_addr = "${RATHOLE_SERVER_ADDR}"
@@ -181,6 +182,11 @@ remote_addr = "${RATHOLE_SERVER_ADDR}"
 type = "tcp"
 token = "${RATHOLE_TOKEN}"
 local_addr = "127.0.0.1:${RATHOLE_LOCAL_PORT}"
+
+[client.services.user_traffic]
+type = "tcp"
+token = "${RATHOLE_TOKEN}"
+local_addr = "127.0.0.1:${RATHOLE_USER_PORT}"
 EOF
   echo "[pasarguard-node] starting Rathole client to ${RATHOLE_SERVER_ADDR}"
   /usr/local/bin/rathole --client "$RATHOLE_CONFIG" 2>&1 &
